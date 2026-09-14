@@ -1,0 +1,59 @@
+﻿@model Dictionary<string, double>
+
+@{
+    ViewData["Title"] = "Confirmar Eliminación";
+    string nombreProducto = ViewBag.NombreProducto as string ?? "";
+}
+
+<audio id="audioAccion" src="~/audio/click.mp3" preload="auto"></audio>
+
+<div class="container my-5" style="max-width: 550px;">
+    <div class="card border-danger shadow">
+        <div class="card-header bg-danger text-white">
+            <h4 class="card-title mb-0">⚠️ Confirmar Eliminación</h4>
+        </div>
+        <div class="card-body">
+            <p class="card-text fs-5">
+                ¿Estás seguro de que deseas eliminar el producto <strong>"@nombreProducto"</strong>?
+            </p>
+            <p class="text-muted small">
+                Esta acción lo removerá permanentemente de los siguientes comercios vinculados:
+            </p>
+
+            <ul class="list-group mb-4">
+                @foreach (var item in Model)
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span>@item.Key</span>
+                        <span class="badge bg-secondary rounded-pill">$@item.Value.ToString("N2")</span>
+                    </li>
+                }
+            </ul>
+
+            <form asp-action="Eliminar" method="post">
+                <input type="hidden" name="nombreProducto" value="@nombreProducto" />
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <a asp-action="Index" class="btn btn-outline-secondary" onclick="reproducirSonido()">
+                        Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-danger fw-bold" onclick="reproducirSonido()">
+                        Sí, Eliminar de Todos
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function reproducirSonido() {
+            const sonido = document.getElementById('audioAccion');
+            if (sonido) {
+                sonido.currentTime = 0;
+                sonido.play().catch(e => console.log(e));
+            }
+        }
+    </script>
+}

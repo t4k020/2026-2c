@@ -1,0 +1,185 @@
+﻿@model List<ClaseMVC.Entidades.Comercio>
+
+@{
+    ViewData["Title"] = "Comparativa de Precios";
+
+    var nombresProductos = Model
+        .SelectMany(c => c.Productos)
+        .Select(p => p.Nombre)
+        .Distinct()
+        .ToList();
+}
+
+<audio id="audioSeleccion" src="~/audio/click.mp3" preload="auto"></audio>
+
+<div class="container my-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Comparativa de Precios Multi-Comercio</h2>
+        <div>
+            <a asp-action="CrearComercio" class="btn btn-outline-success me-2" onclick="reproducirSonido()">
+                + Nuevo Comercio
+            </a>
+            <a asp-action="Crear" class="btn btn-primary" onclick="reproducirSonido()">
+                + Nuevo Producto
+            </a>
+        </div>
+    </div>
+
+    <!-- Selector de Productos -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <label for="selectProducto" class="form-label fw-bold">Selecciona un producto para comparar:</label>
+            <select id="selectProducto" class="form-select" onchange="filtrarProducto()">
+                <option value="" selected disabled>-- Selecciona un producto --</option>
+                @foreach (var nombreProd in nombresProductos)
+                {
+                    <option value="@nombreProd">@nombreProd</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <!-- Tabla Dinámica -->
+    <div id="contenedorTabla" class="card shadow-sm d-none">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Producto</th>
+                            @foreach (var comercio in Model)
+                            {
+                                <th class="text-end">@comercio.Nombre</th>
+                            }
+                            <th class="text-end">Diferencia Máx.</th>
+                            <th class="text-center" style="width: 150px;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var nombreProd in nombresProductos)
+                        {
+                            var preciosRegistrados = Model
+                                .Select(c => c.Productos.FirstOrDefault(p => p.Nombre == nombreProd)?.Precio)
+                                .Where(p => p.HasValue)
+                                .Select(p => p.Value)
+                                .ToList();
+
+                            double difMax = 0;
+                            if (preciosRegistrados.Count > 1)
+                            {
+                                difMax = preciosRegistrados.Max() - preciosRegistrados.Min();
+                            }
+
+                            <tr class="fila-producto" data-producto="@nombreProd">
+                                <td>
+                                    <strong>@nombreProd</strong>
+                                </td>
+
+                                @foreach (var comercio in Model)
+                                {
+                                    var prod = comercio.Productos.FirstOrDefault(p => p.Nombre == nombreProd);
+                                    <td class="text-end">
+                                        @(prod != null ? $"${prod.Precio:N2}" : "-")
+                                    </td>
+                                }
+
+                                <td class="text-end">
+                                    @if (preciosRegistrados.Count > 1)
+                                    {
+                                        <span class="badge bg-warning-subtle text-dark fw-bold">
+                                            $@difMax.ToString("N2")
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Sin comparativa</span>
+                                    }
+                                </td>
+
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <a asp-action="Editar" asp-route-nombre="@nombreProd" class="btn btn-outline-warning" onclick="reproducirSonido()">
+                                            Editar
+                                        </a>
+                                        <!-- Botón que activa el Modal Pop-up -->
+                                        <button type="button" 
+                                                class="btn btn-outline-danger" 
+                                                onclick="abrirModalEliminar('@nombreProd')">
+                                            Eliminar
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Pop-up (Modal Bootstrap) de Confirmación -->
+<div class="modal fade" id="modalEliminar" tabindex="-1" aria-labelledby="modalEliminarLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-danger">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="modalEliminarLabel">⚠️ Confirmar Eliminación</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="fs-5 mb-2">¿Estás seguro de que deseas eliminar el producto <strong id="nombreProductoModal"></strong>?</p>
+                <p class="text-muted small mb-0">Esta acción removerá el producto de todos los comercios donde está registrado.</p>
+            </div>
+            <div class="modal-footer bg-light">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="reproducirSonido()">Cancelar</button>
+                
+                <form asp-action="Eliminar" method="post">
+                    <input type="hidden" id="inputNombreProducto" name="nombreProducto" value="" />
+                    <button type="submit" class="btn btn-danger fw-bold" onclick="reproducirSonido()">
+                        Sí, Eliminar
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function reproducirSonido() {
+            const sonido = document.getElementById('audioSeleccion');
+            if (sonido) {
+                sonido.currentTime = 0;
+                sonido.play().catch(error => console.log(error));
+            }
+        }
+
+        function filtrarProducto() {
+            reproducirSonido();
+
+            const productoSeleccionado = document.getElementById("selectProducto").value;
+            const contenedorTabla = document.getElementById("contenedorTabla");
+            const filas = document.querySelectorAll(".fila-producto");
+
+            contenedorTabla.classList.remove("d-none");
+
+            filas.forEach(fila => {
+                if (fila.getAttribute("data-producto") === productoSeleccionado) {
+                    fila.style.display = "";
+                } else {
+                    fila.style.display = "none";
+                }
+            });
+        }
+
+        // Carga dinámicamente el nombre en el modal y lo muestra
+        function abrirModalEliminar(nombreProducto) {
+            reproducirSonido();
+            document.getElementById("nombreProductoModal").textContent = '"' + nombreProducto + '"';
+            document.getElementById("inputNombreProducto").value = nombreProducto;
+            
+            const modal = new bootstrap.Modal(document.getElementById('modalEliminar'));
+            modal.show();
+        }
+    </script>
+}
