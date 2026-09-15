@@ -5,7 +5,10 @@
     string nombreProducto = ViewBag.NombreProducto as string ?? "";
 }
 
-<audio id="audioAccion" src="~/audio/click.mp3" preload="auto"></audio>
+<audio id="audioAccion" src="~/img/sounds/deltarune-explosion.mp3" preload="auto"></audio>
+
+<audio id="audioAccion2" src="~/img/sounds/flowery-stingus.mp3" preload="auto"></audio>
+
 
 <div class="container my-5" style="max-width: 550px;">
     <div class="card border-danger shadow">
@@ -34,10 +37,10 @@
                 <input type="hidden" name="nombreProducto" value="@nombreProducto" />
 
                 <div class="d-flex justify-content-between align-items-center">
-                    <a asp-action="Index" class="btn btn-outline-secondary" onclick="reproducirSonido()">
+                    <a asp-action="Index" class="btn btn-outline-secondary" onclick="enviarFormularioConSonido()">
                         Cancelar
                     </a>
-                    <button type="submit" class="btn btn-danger fw-bold" onclick="reproducirSonido()">
+                    <button type="submit" class="btn btn-danger fw-bold" onclick="enviarFormularioConSonido2()">
                         Sí, Eliminar de Todos
                     </button>
                 </div>
@@ -54,6 +57,64 @@
                 sonido.currentTime = 0;
                 sonido.play().catch(e => console.log(e));
             }
+        }
+    </script>
+    <script>
+        function reproducirSonido2() {
+            const sonido = document.getElementById('audioAccion2');
+            if (sonido) {
+                sonido.currentTime = 0;
+                sonido.play().catch(e => console.log(e));
+            }
+        }
+    </script>
+
+    <script>
+
+        function enviarFormularioConSonido(event, formulario) {
+        event.preventDefault(); // Detiene el envío inmediato del formulario
+
+        const sonido = document.getElementById('audioAccion') || document.getElementById('audioSeleccion');
+
+        if (sonido) {
+        sonido.currentTime = 0;
+
+        // Cuando termine el audio, envía el formulario
+        sonido.onended = function() {
+        formulario.submit();
+        };
+
+        // En caso de error, envía el formulario inmediatamente
+        sonido.play().catch(error => {
+        console.log("Error al reproducir audio:", error);
+        formulario.submit();
+        });
+        } else {
+        formulario.submit();
+        }
+        }
+
+        function enviarFormularioConSonido2(event, formulario) {
+        event.preventDefault(); // Detiene el envío inmediato del formulario
+
+        const sonido = document.getElementById('audioAccion2') || document.getElementById('audioSeleccion2');
+
+        if (sonido) {
+        sonido.currentTime = 0;
+
+        // Cuando termine el audio, envía el formulario
+        sonido.onended = function() {
+        formulario.submit();
+        };
+
+        // En caso de error, envía el formulario inmediatamente
+        sonido.play().catch(error => {
+        console.log("Error al reproducir audio:", error);
+        formulario.submit();
+        });
+        } else {
+        formulario.submit();
+        }
         }
     </script>
 }

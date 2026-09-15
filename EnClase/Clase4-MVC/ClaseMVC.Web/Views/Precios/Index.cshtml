@@ -10,16 +10,18 @@
         .ToList();
 }
 
-<audio id="audioSeleccion" src="~/audio/click.mp3" preload="auto"></audio>
+<audio id="audioSeleccion" src="~/img/sounds/ralsei-splat.mp3" preload="auto"></audio>
+<audio id="audioSeleccion2" src="~/img/sounds/flowery-stingus.mp3" preload="auto"></audio>
+<audio id="audioSeleccion3" src="~/img/sounds/deltarune-explosion.mp3" preload="auto"></audio>
 
 <div class="container my-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>Comparativa de Precios Multi-Comercio</h2>
         <div>
-            <a asp-action="CrearComercio" class="btn btn-outline-success me-2" onclick="reproducirSonido()">
+            <a asp-action="CrearComercio" class="btn btn-outline-success me-2" onclick="navegarConSonido(event, this.href)">
                 + Nuevo Comercio
             </a>
-            <a asp-action="Crear" class="btn btn-primary" onclick="reproducirSonido()">
+            <a asp-action="Crear" class="btn btn-primary" onclick="navegarConSonido(event, this.href)">
                 + Nuevo Producto
             </a>
         </div>
@@ -98,7 +100,7 @@
 
                                 <td class="text-center">
                                     <div class="btn-group btn-group-sm" role="group">
-                                        <a asp-action="Editar" asp-route-nombre="@nombreProd" class="btn btn-outline-warning" onclick="reproducirSonido()">
+                                        <a asp-action="Editar" asp-route-nombre="@nombreProd" class="btn btn-outline-warning" onclick="navegarConSonido(event, this.href)">
                                             Editar
                                         </a>
                                         <!-- Botón que activa el Modal Pop-up -->
@@ -131,11 +133,11 @@
                 <p class="text-muted small mb-0">Esta acción removerá el producto de todos los comercios donde está registrado.</p>
             </div>
             <div class="modal-footer bg-light">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="reproducirSonido()">Cancelar</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="reproducirSonido2()">Cancelar</button>
                 
                 <form asp-action="Eliminar" method="post">
                     <input type="hidden" id="inputNombreProducto" name="nombreProducto" value="" />
-                    <button type="submit" class="btn btn-danger fw-bold" onclick="reproducirSonido()">
+                    <button type="submit" class="btn btn-danger fw-bold" onclick="enviarFormularioConSonido(event, this.form)">
                         Sí, Eliminar
                     </button>
                 </form>
@@ -148,6 +150,14 @@
     <script>
         function reproducirSonido() {
             const sonido = document.getElementById('audioSeleccion');
+            if (sonido) {
+                sonido.currentTime = 0;
+                sonido.play().catch(error => console.log(error));
+            }
+        }
+
+        function reproducirSonido2() {
+            const sonido = document.getElementById('audioSeleccion2');
             if (sonido) {
                 sonido.currentTime = 0;
                 sonido.play().catch(error => console.log(error));
@@ -181,5 +191,58 @@
             const modal = new bootstrap.Modal(document.getElementById('modalEliminar'));
             modal.show();
         }
+    </script>
+
+    <script>
+
+        function enviarFormularioConSonido(event, formulario) {
+            event.preventDefault(); // Detiene el envío inmediato del formulario
+
+            const sonido = document.getElementById('audioAccion3') || document.getElementById('audioSeleccion3');
+
+            if (sonido) {
+                sonido.currentTime = 0;
+
+                // Cuando termine el audio, envía el formulario
+                sonido.onended = function() {
+                    formulario.submit();
+                };
+
+                // En caso de error, envía el formulario inmediatamente
+                sonido.play().catch(error => {
+                    console.log("Error al reproducir audio:", error);
+                    formulario.submit();
+                });
+            } else {
+                formulario.submit();
+            }
+        }
+
+
+
+        function navegarConSonido(event, url) {
+            event.preventDefault(); // Detiene la navegación inmediata
+
+            const sonido = document.getElementById('audioAccion2') || document.getElementById('audioSeleccion2');
+
+            if (sonido) {
+                sonido.currentTime = 0;
+
+                // Cuando termine el audio, redirige a la URL
+                sonido.onended = function() {
+                    window.location.href = url;
+                };
+
+                // En caso de error o restricción del navegador, redirige inmediatamente
+                sonido.play().catch(error => {
+                    console.log("Error al reproducir audio:", error);
+                    window.location.href = url;
+                });
+            } else {
+                window.location.href = url;
+            }
+        }
+
+
     </script>
 }
