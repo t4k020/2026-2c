@@ -19,6 +19,8 @@ namespace ClaseMVC.Logica
     public class PreciosServicios : IPreciosServicios
     {
         private static readonly List<Comercio> comercios = new List<Comercio>();
+
+        //como es static, solo se ejecuta una vez para cargar los comercios a la lista
         static PreciosServicios()
         {
             comercios.Add(new Comercio
@@ -54,22 +56,26 @@ namespace ClaseMVC.Logica
 
         public void AgregarProductoAComercio(string nombre, Producto producto)
         {
+            // OrdinalIgnoreCase = CaseInsensitive
             var comercio = comercios.Find(c => c.Nombre.Equals(nombre, StringComparison.OrdinalIgnoreCase));
             if (comercio != null)
             {
                 comercio.Productos.Add(producto);
             }
         }
+        //un dictionary es como un map clave/valor
         public void AgregarComercio(Comercio nuevoComercio, Dictionary<string, double> productosConPrecio)
         {
             if (productosConPrecio != null && productosConPrecio.Any())
             {
                 nuevoComercio.Productos = productosConPrecio
-                    .Select(kvp => new Producto
+                    //por cada clave/valor se instancia un producto
+                    .Select(productosConPrecio => new Producto
                     {
-                        Nombre = kvp.Key,
-                        Precio = kvp.Value
+                        Nombre = productosConPrecio.Key,
+                        Precio = productosConPrecio.Value
                     })
+                    //lo convierte en una lista
                     .ToList();
             }
 
