@@ -1,0 +1,31 @@
+@{
+    Layout = "_LayoutFlores";
+}
+
+@model List<ClaseMVC.Entidades.Flor>
+
+<!-- Empty template view for Flores -->
+<h1>Flores</h1>
+<a href="/flores/agregar" class="btn btn-primary mb-3">Agregar Flor</a>
+
+@if (Model != null)
+{
+    <ul>
+    @foreach (var flor in Model)
+    {
+        <li style="margin: 2em 0">
+            <strong>@flor.nombre</strong>
+            @if (!string.IsNullOrEmpty(flor.imgUrl))
+            {
+                    <div><a asp-action="Editar" asp-route-id="@flor.Id"><img src="@flor.imgUrl" alt="@flor.nombre" style="max-width:200px;" /></a></div>
+            }
+            <div>@flor.descripcion</div>
+                <div><a href="/flores/eliminar/@flor.Id" class="btn btn-danger">Eliminar</a></div>
+        </li>
+    }
+    </ul>
+}
+else
+{
+    <p>No hay flores para mostrar.</p>
+}

@@ -1,0 +1,25 @@
+﻿
+@model LeerLibroViewModel
+
+@{
+    ViewData["Title"] = Model.Titulo;
+}
+
+<h1>@Model.Titulo</h1>
+<p>Página @Model.Numero de @Model.TotalPaginas</p>
+
+<div style="white-space: pre-wrap;">@Model.Contenido</div>
+
+<div class="mt-3">
+    @if (Model.Numero > 1)
+    {
+        <a asp-action="Leer" asp-route-id="@Model.LibroId" asp-route-numero="@(Model.Numero - 1)"
+           class="btn btn-secondary">Anterior</a>
+    }
+    @if (Model.Numero < Model.TotalPaginas)
+    {
+        <a asp-action="Leer" asp-route-id="@Model.LibroId" asp-route-numero="@(Model.Numero + 1)"
+           class="btn btn-primary">Siguiente</a>
+    }
+    <a asp-action="Index" class="btn btn-link">Buscar otro libro</a>
+</div>

@@ -1,19 +1,53 @@
-﻿@model List<ClaseMVC.Entidades.Animal>
+﻿@model List<ClaseMVC.Web.Models.AnimalViewModel>
 @{
-    Layout = "_LayoutAnimales2Columnas";
+    Layout = "_LayoutAnimales2Secciones";
 }
 
 
 <h1>Animales</h1>
-@* listado de animales con raza, peso, edad estimada y si esta en extincion *@
-
 <a href="/animales/agregar" class="btn btn-primary mb-3">Agregar Animal</a>
+
+@{
+    var recientes = ViewBag.Recientes as List<ClaseMVC.Web.Models.AnimalViewModel>;
+}
+@if (recientes != null && recientes.Count > 0)
+{
+    <div class="mb-3">
+        <h5>Recientemente vistos</h5>
+        <ul class="list-inline">
+            @foreach (var r in recientes)
+            {
+                <li class="list-inline-item">@* usa la parcial que contiene link a Editar *@
+                    <partial name="_pvAnimalAvatar" model="r" />
+                </li>
+            }
+        </ul>
+    </div>
+}
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-success" style="color:red">
+        @TempData["Mensaje"]
+    </div>
+}
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-success" style="color:red">
+        @TempData["Alerta"]
+    </div>
+}
+
 <table class="table">
     <thead>
         <tr>
             <th>Raza</th>
             <th>Peso</th>
             <th>Edad Estimada</th>
+            <th>Habitat</th>
+            <th>Largo</th>
+            <th>Significado</th>
             <th>En Extinción</th>
             <th>Eliminar</th>
         </tr>
@@ -25,6 +59,9 @@
                 <td><partial name="_pvAnimalAvatar" model="animal" /></td>
                 <td>@animal.Peso</td>
                 <td>@animal.EdadEstimada</td>
+                <td>@animal.Habitat</td>
+                <td>@(animal.Largo.HasValue ? animal.Largo.Value.ToString() : "-")</td>
+                <td>@animal.SignificadoNombre</td>
                 <td>@(animal.EnExtincion ? "Sí" : "No")</td>
                 <td>
                     <a href="/animales/eliminar/@animal.Id" class="btn btn-danger">Eliminar</a>

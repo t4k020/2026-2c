@@ -1,0 +1,11 @@
+﻿@model Clase6.EF.Web.Models.TematicaViewModel
+
+<h1>Agregar Nueva Tematica</h1>
+
+<form asp-action="Agregar" method="post">
+    <div class="form-group">
+        <label asp-for="Nombre"></label>
+        <input asp-for="Nombre" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Agregar</button>
+</form>

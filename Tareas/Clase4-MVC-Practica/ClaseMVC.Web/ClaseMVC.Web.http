@@ -1,0 +1,22 @@
+﻿@ClaseMVC.Web_HostAddress = https://localhost:7200
+
+GET {{ClaseMVC.Web_HostAddress}}/api/animal
+
+###
+
+POST {{ClaseMVC.Web_HostAddress}}/api/animal
+Content-Type: application/json
+
+{
+    "Animal":
+    {
+  "Id": 6,
+  "Raza": "Tortuga",
+  "Peso" : 2,
+  "EdadEstimada": 200,
+  "EnExtincion": "true",
+  "ImagenUrl": "-"
+    }
+}
+
+###

@@ -1,0 +1,38 @@
+@model List<ClaseMVC.Entidades.Alimento>
+
+@{
+    ViewData["Title"] = "Lista de alimentos";
+}
+
+<h2>Lista de alimentos</h2>
+
+@if (TempData["Mensaje"] != null)
+{
+    <div class="alert alert-info">@TempData["Mensaje"]</div>
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Calorías</th>
+            <th>Peso (g)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var a in Model)
+    {
+        <tr>
+            <td>@a.Id</td>
+            <td>@a.Nombre</td>
+            <td>@a.Calorias</td>
+            <td>@a.Peso</td>
+            <td>
+                <a class="btn btn-sm btn-danger" href="/Alimentos/Eliminar/@a.Id">Eliminar</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

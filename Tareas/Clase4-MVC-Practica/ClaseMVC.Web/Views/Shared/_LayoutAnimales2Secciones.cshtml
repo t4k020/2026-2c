@@ -1,0 +1,30 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_LayoutAnimales";
+}
+
+@* 2 columnas bootstrap *@
+<div class="container-fluid px-0">
+    <div class="row g-4">
+        <!-- Columna izquierda: filtros -->
+        <aside class="col-12 col-md-4 col-lg-3">
+                <h2>Texto intro</h2>
+
+                <hr />
+
+                <div class="form-check mb-2">
+                    <label class="form-check-label" for="soloEnPeligro" style="font-size:.85rem;">
+                        Cuidar nuestro planeta
+                    </label>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Columna derecha: listado de animales -->
+        <section class="col-12 col-md-8 col-lg-9">
+            @RenderBody()
+        </section>
+    </div>
+</div>

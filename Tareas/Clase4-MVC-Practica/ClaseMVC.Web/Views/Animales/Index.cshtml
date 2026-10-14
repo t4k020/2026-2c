@@ -1,0 +1,35 @@
+﻿@model List<ClaseMVC.Entidades.Animal>
+@{
+    Layout = "_LayoutAnimales2Secciones";
+}
+
+
+<h1>Animales</h1>
+@* listado de animales con raza, peso, edad estimada y si esta en extincion *@
+
+<a href="/animales/agregar" class="btn btn-primary mb-3">Agregar Animal</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Raza</th>
+            <th>Peso</th>
+            <th>Edad Estimada</th>
+            <th>En Extinción</th>
+            <th>Eliminar</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var animal in Model)
+        {
+            <tr>
+                <td><partial name="_pvAnimalAvatar" model="animal" /></td>
+                <td>@animal.Peso</td>
+                <td>@animal.EdadEstimada</td>
+                <td>@(animal.EnExtincion ? "Sí" : "No")</td>
+                <td>
+                    <a href="/animales/eliminar/@animal.Id" class="btn btn-danger">Eliminar</a>
+                 </td>
+            </tr>
+        }
+    </tbody>
+</table>

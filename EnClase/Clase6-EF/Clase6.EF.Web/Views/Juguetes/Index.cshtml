@@ -1,0 +1,44 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@section Scripts {
+    <link href="https://cdn.datatables.net/v/dt/dt-2.3.8/datatables.min.css" rel="stylesheet" integrity="sha384-1BvCnyKidMPIGQGjvMn+w+90hHBhYJtF+R7os4NX2Abe7tSxWQadHRTSH5qb559A" crossorigin="anonymous">
+    <script src="https://cdn.datatables.net/v/dt/dt-2.3.8/datatables.min.js" integrity="sha384-kjkli48Tmhwhaghq0IIRm8gFmMdnihfu1ywAOyyGWYMsoZZi/6AX2fWzpsqahoFw" crossorigin="anonymous"></script>
+
+    <script>
+            new DataTable('#tblJuguetes', {
+        language: {
+            url: '//cdn.datatables.net/plug-ins/2.3.8/i18n/es-ES.json',
+        },
+        });
+    </script>
+}
+@model IEnumerable<JugueteViewModel>
+
+<h1>Juguetes</h1>
+<table class="table" id="tblJuguetes">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Precio</th>
+            <th>Edad Recomendada</th>
+            <th>Tematica</th>
+            <th>Eliminar</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var juguete in Model)
+        {
+            <tr>
+                <td><a href="/juguetes/editar/@juguete.Id">@juguete.Nombre</a></td>
+                <td>@juguete.Precio</td>
+                <td>@juguete.EdadRecomendada</td>
+                <td>@juguete.Tematica?.Nombre</td>
+                <td><a href="/juguetes/eliminar/@juguete.Id">Eliminar</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

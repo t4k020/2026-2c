@@ -1,0 +1,263 @@
+
+@model Comparador.Entidad.ComparadorViewModel
+@{
+    ViewData["Title"] = "Comparador";
+}
+
+    
+
+<h1>Comparador</h1>
+
+<style>
+    
+    #comparadorForm {
+        max-width: 900px;
+        margin: 12px 0 20px 0;
+        padding: 16px;
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(220px, 1fr));
+        gap: 12px;
+        align-items: end;
+        box-shadow: 0 1px 3px rgba(16,24,40,0.04);
+    }
+
+    #comparadorForm div { display: flex; flex-direction: column; }
+
+    
+    #comparadorForm .button-cell { display: flex; justify-content: center; }
+
+    #comparadorForm label {
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: #374151;
+        font-size: 0.95rem;
+    }
+
+    #comparadorForm input[type="text"],
+    #comparadorForm input[type="date"],
+    #comparadorForm select {
+        padding: 8px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        background: #ffffff;
+        font-size: 0.95rem;
+    }
+
+    #comparadorForm button {
+        padding: 9px 12px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    #comparadorForm #btnCargarGrilla { background: #2563eb; color: #ffffff; }
+    #comparadorForm #btnRefrescarGrilla { background: #e5e7eb; color: #111827; }
+
+    
+    table#dgvComparacion {
+        width: 100%;
+        border-collapse: collapse;
+        max-width: 900px;
+        margin-top: 8px;
+        font-family: inherit;
+    }
+
+    table#dgvComparacion th, table#dgvComparacion td {
+        padding: 10px 12px;
+        border-bottom: 1px solid #e5e7eb;
+        text-align: left;
+        font-size: 0.95rem;
+    }
+
+    table#dgvComparacion thead th {
+        background: #f3f4f6;
+        font-weight: 700;
+        color: #111827;
+        border-bottom: 2px solid #d1d5db;
+    }
+
+    table#dgvComparacion tbody tr:nth-child(even) { background: #fbfbfd; }
+    table#dgvComparacion tbody tr:hover { background: #f1f5f9; }
+
+    @@media (max-width: 600px) {
+        #comparadorForm { grid-template-columns: 1fr; }
+    }
+</style>
+
+<form id="comparadorForm" onsubmit="return false;">
+    <div>
+        <label for="fecha">Fecha</label>
+        <input type="date" id="fecha" name="fecha" />
+    </div>
+
+    <div>
+        <label for="producto">Producto</label>
+        <select id="producto" name="producto">
+            <option value="">--Seleccione--</option>
+            @if (Model?.Productos != null)
+            {
+                foreach (var p in Model.Productos)
+                {
+                    <option value="@p.nombre">@p.nombre</option>
+                }
+            }
+        </select>
+    </div>
+
+    <div>
+        <label for="comercio1">Comercio 1</label>
+        <select id="comercio1" name="comercio1">
+            <option value="">--Seleccione--</option>
+            @if (Model?.Comercios != null)
+            {
+                foreach (var c in Model.Comercios)
+                {
+                    <option value="@c.nombre">@c.nombre</option>
+                }
+            }
+        </select>
+    </div>
+
+    <div>
+        <label for="comercio2">Comercio 2</label>
+        <select id="comercio2" name="comercio2">
+            <option value="">--Seleccione--</option>
+            @if (Model?.Comercios != null)
+            {
+                foreach (var c in Model.Comercios)
+                {
+                    <option value="@c.nombre">@c.nombre</option>
+                }
+            }
+        </select>
+    </div>
+
+    <div>
+        <label for="precio1">Precio 1</label>
+        <input type="text" id="precio1" name="precio1" />
+    </div>
+
+    <div>
+        <label for="precio2">Precio 2</label>
+        <input type="text" id="precio2" name="precio2" />
+    </div>
+
+    <div class="button-cell">
+        <button id="btnCargarGrilla">Registrar valor</button>
+    </div>
+    <div class="button-cell">
+        <button id="btnRefrescarGrilla" type="button">Refrescar grilla</button>
+    </div>
+</form>
+
+<table id="dgvComparacion" border="1">
+    <thead>
+        <tr>
+            <th>Fecha</th>
+            <th>Producto</th>
+            <th>Comercio 1</th>
+            <th>Precio 1</th>
+            <th>Comercio 2</th>
+            <th>Precio 2</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model?.Comparaciones != null)
+        {
+            foreach (var c in Model.Comparaciones)
+            {
+                <tr>
+                    <td>@c.fecha</td>
+                    <td>@c.producto</td>
+                    <td>@c.comercio1</td>
+                    <td>@c.precio1</td>
+                    <td>@c.comercio2</td>
+                    <td>@c.precio2</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<script>
+
+    async function enviarComparacionAlController() {
+        const fecha = document.getElementById('fecha').value;
+        const producto = document.getElementById('producto').value;
+        const comercio1 = document.getElementById('comercio1').value;
+        const precio1 = document.getElementById('precio1').value;
+        const comercio2 = document.getElementById('comercio2').value;
+        const precio2 = document.getElementById('precio2').value;
+
+        const payload = { fecha: fecha, producto: producto, comercio1: comercio1, precio1: precio1, comercio2: comercio2, precio2: precio2 };
+
+        try {
+            const resp = await fetch('/Comparador/AgregarComparacion', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            
+            if (resp.ok) {
+                
+                window.location.reload();
+            } else {
+                alert('Error al enviar comparacion: ' + resp.status);
+            }
+        } catch (err) {
+            console.error('Excepcion al enviar comparacion', err);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        document.getElementById('btnCargarGrilla').addEventListener('click', function (e) {
+            e.preventDefault();
+            const valid = validarPrecios();
+            if (!valid.ok) {
+                alert(valid.mensaje);
+                return;
+            }
+            enviarComparacionAlController();
+        });
+
+        document.getElementById('btnRefrescarGrilla').addEventListener('click', function () {
+            window.location.reload();
+        });
+        
+    });
+
+    // Valida que los precios no estén vacíos y sean números (acepta coma o punto como separador)
+    function validarPrecios() {
+        const p1El = document.getElementById('precio1');
+        const p2El = document.getElementById('precio2');
+        let p1 = (p1El.value || '').trim();
+        let p2 = (p2El.value || '').trim();
+
+        if (!p1 || !p2) {
+            return { ok: false, mensaje: 'Los campos de precio no pueden estar vacíos.' };
+        }
+
+        // Normalizar coma a punto
+        p1 = p1.replace(',', '.');
+        p2 = p2.replace(',', '.');
+
+        const n1 = parseFloat(p1);
+        const n2 = parseFloat(p2);
+
+        if (!isFinite(n1) || isNaN(n1) || !isFinite(n2) || isNaN(n2)) {
+            return { ok: false, mensaje: 'Solo se pueden ingresar números en los campos de precio.' };
+        }
+
+        // Escribir los valores normalizados en los inputs para enviar consistentemente
+        p1El.value = n1.toString();
+        p2El.value = n2.toString();
+
+        return { ok: true, precio1: n1, precio2: n2 };
+    }
+</script>

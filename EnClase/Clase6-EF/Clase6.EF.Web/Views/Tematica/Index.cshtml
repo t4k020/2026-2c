@@ -1,0 +1,36 @@
+﻿@model List<Clase6.EF.Web.Models.TematicaViewModel>
+
+    @section Scripts {
+    <link href="https://cdn.datatables.net/v/dt/dt-2.3.8/datatables.min.css" rel="stylesheet" integrity="sha384-1BvCnyKidMPIGQGjvMn+w+90hHBhYJtF+R7os4NX2Abe7tSxWQadHRTSH5qb559A" crossorigin="anonymous">
+    <script src="https://cdn.datatables.net/v/dt/dt-2.3.8/datatables.min.js" integrity="sha384-kjkli48Tmhwhaghq0IIRm8gFmMdnihfu1ywAOyyGWYMsoZZi/6AX2fWzpsqahoFw" crossorigin="anonymous"></script>
+
+    <script>
+            new DataTable('#tblTematicas', {
+        language: {
+            url: '//cdn.datatables.net/plug-ins/2.3.8/i18n/es-ES.json',
+        },
+        });
+    </script>
+    }
+<h1>Tematicas</h1>
+
+<a href="/tematica/Agregar">Agregar Nueva Tematica</a>
+<table class="table" id="tblTematicas">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Eliminar</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var tematica in Model)
+        {
+            <tr>
+                <td>@tematica.Id</td>
+                <td><a href="@Url.Action("Editar", new { id = tematica.Id })">@tematica.Nombre</a></td>
+                <td><a href="@Url.Action("Eliminar", new { id = tematica.Id })">Eliminar</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

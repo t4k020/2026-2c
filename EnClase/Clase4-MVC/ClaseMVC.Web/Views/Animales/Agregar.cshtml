@@ -3,27 +3,60 @@
 }
 
 
-@model ClaseMVC.Entidades.Animal
+@model ClaseMVC.Web.Models.AnimalViewModel
 
 <h1>Agregar Animal</h1>
 <a href="/animales" class="btn btn-secondary mb-3">Volver</a>
-
+    <div>
+    <p>Los nacimientos del ultimos mes fueron de @ViewBag.NacimientosUltimoMes  </p>
+  </div>
 <form action="@Url.Action("Agregar", "Animales")" method="post">
     <div class="form-group">
         <label for="Raza">Raza</label>
-        <input type="text" class="form-control" id="Raza" name="Raza" value="@Model.Raza" required />
+        <input asp-for="Raza" class="form-control" />
+        <span asp-validation-for="Raza" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label for="Peso">Peso</label>
-        <input type="number" class="form-control" id="Peso" name="Peso" value="@Model.Peso" required />
+        <input asp-for="Peso" class="form-control" />
+        <span asp-validation-for="Peso" class="text-danger"></span>
     </div>
     <div class="form-group">
         <label for="EdadEstimada">Edad Estimada</label>
-        <input type="number" class="form-control" id="EdadEstimada" name="EdadEstimada" value="@Model.EdadEstimada" required />
+        <input asp-for="EdadEstimada" class="form-control" />
+        <span asp-validation-for="EdadEstimada" class="text-danger"></span>
     </div>
     <div class="form-group form-check">
         <input asp-for="EnExtincion" class="form-check-input" />
         <label class="form-check-label" for="EnExtincion">En Extinción</label>
     </div>
+    <div>
+        <label for="Habitat">Habitat</label>
+        <input asp-for="Habitat" class="form-control" />
+        <span asp-validation-for="Habitat" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label for="Largo">Largo</label>
+        <input asp-for="Largo" class="form-control" />
+        <span asp-validation-for="Largo" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label for="SignificadoNombre">SignificadoNombre</label>
+        <input asp-for="SignificadoNombre" class="form-control" />
+        <span asp-validation-for="SignificadoNombre" class="text-danger"></span>
+    </div>
+
+     <div class="form-group form-check">
+       <label for="ImagenUrl">Imagen</label>
+        <input asp-for="ImagenUrl" class="form-control" />
+        <span asp-validation-for="ImagenUrl" class="text-danger"></span>
+    </div>
+    
     <button type="submit" class="btn btn-primary">Agregar Animal</button>
 </form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

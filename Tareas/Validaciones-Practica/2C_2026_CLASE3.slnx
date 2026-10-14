@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="2C_2026_CLASE3.Entidades/2C_2026_CLASE3.Entidades.csproj" />
+  <Project Path="2C_2026_CLASE3.Logica/2C_2026_CLASE3.Logica.csproj" />
+  <Project Path="2C_2026_CLASE3.Web/2C_2026_CLASE3.Web.csproj" />
+</Solution>

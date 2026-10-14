@@ -1,0 +1,78 @@
+@model Animal
+
+<h1>Editar animal</h1>
+
+<form asp-action="Editar" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label asp-for="Raza" class="form-label"></label>
+        <input asp-for="Raza" class="form-control" />
+        <span asp-validation-for="Raza" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Peso" class="form-label"></label>
+        <input asp-for="Peso" class="form-control" />
+        <span asp-validation-for="Peso" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="EdadEstimada" class="form-label"></label>
+        <input asp-for="EdadEstimada" class="form-control" />
+        <span asp-validation-for="EdadEstimada" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="UrlImagen" class="form-label"></label>
+        <input asp-for="UrlImagen" class="form-control" />
+        <span asp-validation-for="UrlImagen" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Habitat" class="form-label"></label>
+        <input asp-for="Habitat" class="form-control" />
+        <span asp-validation-for="Habitat" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="LugarOrigen" class="form-label"></label>
+        <input asp-for="LugarOrigen" class="form-control" />
+        <span asp-validation-for="LugarOrigen" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Largo" class="form-label"></label>
+        <input asp-for="Largo" class="form-control" />
+        <span asp-validation-for="Largo" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Alto" class="form-label"></label>
+        <input asp-for="Alto" class="form-control" />
+        <span asp-validation-for="Alto" class="text-danger"></span>
+    </div>
+
+    <div class="@(ViewBag.Alto < 100 ? "text-success" : ViewBag.Alto < 300 ? "text-warning" : "text-danger")">
+        <span>
+            Tamaño: @(ViewBag.Alto < 100 ? "Pequeño" : ViewBag.Alto < 300 ? "Mediano" : "Grande")
+        </span>
+    </div>
+
+    <div class="form-check mb-3">
+        <input asp-for="EnExtincion" class="form-check-input" />
+        <label asp-for="EnExtincion" class="form-check-label"></label>
+        <span asp-validation-for="EnExtincion" class="text-danger"></span>
+    </div>
+
+    <div class="@(ViewBag.CantidadEjemplares < 1000 ? "text-danger" : "text-success")">
+        <span>Cantidad de ejemplares: @ViewBag.CantidadEjemplares</span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

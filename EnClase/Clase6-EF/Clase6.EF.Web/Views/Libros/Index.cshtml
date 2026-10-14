@@ -1,0 +1,53 @@
+﻿@model BuscarLibroViewModel
+
+@{
+    ViewData["Title"] = "Buscar libro";
+}
+
+<h1>Buscar libro</h1>
+
+<form id="formBuscar" asp-action="Buscar" method="post">
+    <input type="text" name="titulo" value="@Model.Titulo" class="form-control" placeholder="Título del libro" />
+    <button id="btnBuscar" type="submit" class="btn btn-primary mt-2">
+        <span id="spinner" class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+        <span id="textoBoton">Buscar</span>
+    </button>
+</form>
+
+<p id="mensajeCargando" class="text-muted mt-3 d-none">
+    Buscando el libro y descargándolo, esto puede tardar unos segundos...
+</p>
+@section Scripts {
+    <script>
+        document.getElementById('formBuscar').addEventListener('submit', function () {
+            document.getElementById('spinner').classList.remove('d-none');
+            document.getElementById('textoBoton').textContent = 'Buscando...';
+            document.getElementById('btnBuscar').disabled = true;
+            document.getElementById('mensajeCargando').classList.remove('d-none');
+        });
+    </script>
+}
+
+@if (Model.Mensaje != null)
+{
+    <p class="text-danger mt-3">@Model.Mensaje</p>
+}
+
+<h2 class="mt-4">Libros guardados</h2>
+
+@if (Model.Libros.Any())
+{
+    <ul>
+        @foreach (var libro in Model.Libros)
+        {
+            <li>
+                <a asp-action="Leer" asp-route-id="@libro.Id" asp-route-numero="1">@libro.Titulo</a>
+                <span class="text-muted">— @libro.Autor</span>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p class="text-muted">Todavía no hay libros guardados.</p>
+}

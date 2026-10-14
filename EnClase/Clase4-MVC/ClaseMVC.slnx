@@ -1,5 +1,6 @@
 <Solution>
   <Project Path="ClaseMVC.Entidades/ClaseMVC.Entidades.csproj" />
   <Project Path="ClaseMVC.Logica/ClaseMVC.Logica.csproj" />
+  <Project Path="ClaseMVC.Web.Tests/ClaseMVC.Web.Tests.csproj" />
   <Project Path="ClaseMVC.Web/ClaseMVC.Web.csproj" />
 </Solution>

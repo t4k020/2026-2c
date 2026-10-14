@@ -1,0 +1,29 @@
+﻿@{
+    Layout = "_LayoutAnimales";
+}
+
+
+@model ClaseMVC.Entidades.Animal
+
+<h1>Agregar Animal</h1>
+<a href="/animales" class="btn btn-secondary mb-3">Volver</a>
+
+<form action="@Url.Action("Agregar", "Animales")" method="post">
+    <div class="form-group">
+        <label for="Raza">Raza</label>
+        <input type="text" class="form-control" id="Raza" name="Raza" value="@Model.Raza" required />
+    </div>
+    <div class="form-group">
+        <label for="Peso">Peso</label>
+        <input type="number" class="form-control" id="Peso" name="Peso" value="@Model.Peso" required />
+    </div>
+    <div class="form-group">
+        <label for="EdadEstimada">Edad Estimada</label>
+        <input type="number" class="form-control" id="EdadEstimada" name="EdadEstimada" value="@Model.EdadEstimada" required />
+    </div>
+    <div class="form-group form-check">
+        <input asp-for="EnExtincion" class="form-check-input" />
+        <label class="form-check-label" for="EnExtincion">En Extinción</label>
+    </div>
+    <button type="submit" class="btn btn-primary">Agregar Animal</button>
+</form>
